@@ -6,4 +6,4 @@ client.start();
 
 client.on('ready', () => {
     console.log("I'm ready for work master!")
-})
+});
