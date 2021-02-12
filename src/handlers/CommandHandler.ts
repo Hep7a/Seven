@@ -13,17 +13,24 @@ export default class CommandHandler extends Collection<string, Command> {
         this.client = client;
     }
 
-    async load() {
-        const cmdFolders = await fs.promises.readdir(join(__dirname, "..", "commands"));
+    async load(): Promise<Collection<string, Command>> {
+        const path = join(__dirname, "..", "commands")
+        const cmdFolders = await fs.promises.readdir(`${path}`);
+        cmdFolders.forEach(async folder => {
+            const cmdFiles = await fs.promises.readdir(`${path}/${folder}`);
 
-        cmdFolders.forEach(async (folder: string) => {
-            const cmdFiles = await fs.promises.readdir(join(__dirname, "..", "commands", folder));
+            for (const file of cmdFiles.filter(x => x.endsWith(".js"))) {
+                const cmd: typeof Command = await import(`${path}/${folder}/${file}`).then(x => x.default)
+                const command = new cmd(file);
 
-            for (const file of cmdFiles.filter(x => x.startsWith(".js"))) {
-                const cmd: Command = await import(`../commands/${folder}/${file}`).then(x => x.default);
-
-                this.set(cmd.name, cmd);
+                this.set(command.name, command);
             }
-        })
+        });
+
+        return this;
+    }
+
+    fetch(name: string) {
+        if (this.has(name)) return this.get(name) as Command;
     }
 }

@@ -5,7 +5,7 @@ import Command from "../../structures/Command";
 
 export default class PingCommand extends Command {
     constructor() {
-        super(client, "ping", {
+        super("ping", {
             aliases: [
                 "ping"
             ],
@@ -20,6 +20,6 @@ export default class PingCommand extends Command {
     }
 
     exec(message: Message) {
-        message.channel.send(`Pong!\`${client.ws.ping}ms\``)
+        message.channel.send(`Pong! \`${this.client.ws.ping}ms\``);
     }
 }

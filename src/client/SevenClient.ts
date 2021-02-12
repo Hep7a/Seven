@@ -1,5 +1,6 @@
-import { Client } from "discord.js";
+import { Client, Collection } from "discord.js";
 import CommandHandler from "../handlers/CommandHandler";
+import Command from "../structures/Command";
 
 export default class SevenClient extends Client {
     public token: string;

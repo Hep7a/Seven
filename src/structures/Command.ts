@@ -1,16 +1,17 @@
 import { Message } from "discord.js";
+import { client } from "../bot";
 import SevenClient from "../client/SevenClient";
 
 export default class Command {
-    public client: SevenClient;
+    public client: SevenClient = client
 
     name: string;
-    options?: CommandOptions;
+    aliases: string[]
+    options: CommandOptions;
 
-    constructor(client: SevenClient, name: string, options?: CommandOptions) {
+    constructor(name: string, options?: CommandOptions) {
         this.name = name;
-        this.options = options;
-        this.client = client;
+        this.aliases = options?.aliases ?? []
     }
 
     exec(_message: Message) {
@@ -20,7 +21,7 @@ export default class Command {
 
 class CommandOptions {
     aliases: string[];
-    description: {
+    description?: {
         content: string;
         usage: string;
         examples: string[];
